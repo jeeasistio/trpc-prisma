@@ -1,6 +1,7 @@
+import { countries } from '@prisma/client'
 import Head from 'next/head'
 import Link from 'next/link'
-import { ChangeEventHandler, useEffect, useState } from 'react'
+import { ChangeEventHandler, useState } from 'react'
 import { trpc } from '../helpers/trpc'
 import styles from '../styles/Home.module.css'
 
@@ -21,6 +22,8 @@ export default function Home() {
         setText(e.target.value)
     }
 
+    console.log(data)
+
     return (
         <div className={styles.container}>
             <Head>
@@ -38,7 +41,7 @@ export default function Home() {
                     })
 
                     return acc
-                }, [])
+                }, [] as countries[])
                 .map((country) => (
                     <div key={country.name}>
                         <Link href={`/${country.name}`}>

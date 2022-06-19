@@ -9,16 +9,16 @@ const appRouter = trpc
     .query('getAllCountries', {
         input: z.object({
             name: z.string().optional(),
-            cursor: z.string().nullish()
+            cursor: z.number().nullish()
         }),
         async resolve({ input }) {
             const limit = 5
             const name = input.name !== '' ? input.name : undefined
             const cursor = input.cursor ? { id: input.cursor } : undefined
-            const cursorObject = input.cursor !== '' ? cursor : undefined
+            const cursorObject = input.cursor ? cursor : undefined
             const skip = input.name === '' ? 1 : 0
 
-            const countries = await getAllCountries(name, limit, cursorObject, skip)
+            const countries = await getAllCountries({ take: limit, cursor: cursorObject, skip, name })
             const nextCursor = countries.length === limit ? countries[limit - 1].id : undefined
 
             return {
@@ -28,9 +28,11 @@ const appRouter = trpc
         }
     })
     .query('getCountry', {
-        input: (val: string) => val,
+        input: z.object({
+            name: z.string()
+        }),
         async resolve({ input }) {
-            return await getCountry(input)
+            return await getCountry(input.name)
         }
     })
 

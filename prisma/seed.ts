@@ -1,25 +1,30 @@
 import axios from 'axios'
 import { PrismaClient } from '@prisma/client'
-import { v4 as uuidv4 } from 'uuid'
 
 const prisma = new PrismaClient()
 
-async function main() {
-    const res = await axios.get('https://restcountries.com/v3.1/all')
+interface CountriesRes {
+    name: {
+        common: string
+    }
+    continents: string[]
+    capital?: string[]
+    region: string
+    population: number
+}
 
-    res.data.map(
-        async (country) =>
-            await prisma.countries.create({
-                data: {
-                    id: uuidv4(),
-                    name: country.name.common,
-                    continent: country?.continents[0],
-                    capital: country.capital?.[0] ?? 'Unknown',
-                    region: country.region,
-                    population: country.population
-                }
-            })
-    )
+async function main() {
+    const res = await axios.get<CountriesRes[]>('https://restcountries.com/v3.1/all')
+
+    const countries = res.data.map((country) => ({
+        name: country.name.common,
+        continent: country?.continents[0],
+        capital: country.capital?.[0] ?? 'Unknown',
+        region: country.region,
+        population: country.population
+    }))
+
+    await prisma.countries.createMany({ data: countries })
 }
 
 main()

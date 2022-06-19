@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 
 export default function Country() {
     const router = useRouter()
-    const { data: country } = trpc.useQuery(['getCountry', router.query.name as string])
+    const { data: country } = trpc.useQuery(['getCountry', { name: router.query.name as string }])
 
     return (
         <div className={styles.container}>
