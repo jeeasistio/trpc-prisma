@@ -15,7 +15,6 @@ export default function Home() {
 
     const handleLoadMore = async () => {
         await fetchNextPage()
-        setCountries((prev) => [...prev, ...data.pages[data.pages.length - 1].countries])
     }
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
