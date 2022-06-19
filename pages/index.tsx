@@ -22,8 +22,6 @@ export default function Home() {
         setText(e.target.value)
     }
 
-    console.log(data)
-
     return (
         <div className={styles.container}>
             <Head>
