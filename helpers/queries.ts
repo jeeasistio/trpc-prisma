@@ -1,4 +1,4 @@
-import prismaClient from './prisma'
+import prismaClient from './prisma';
 
 export const getAllCountries = async ({
     take,
@@ -12,10 +12,10 @@ export const getAllCountries = async ({
     name?: string
 }) =>
     await prismaClient.countries.findMany({
-        where: { name: { contains: name, mode: 'insensitive' } },
+        where: { name: { contains: name } },
         take,
         cursor,
         skip
     })
 
-export const getCountry = async (name: string) => await prismaClient.countries.findFirst({ where: { name } })
+export const getCountry = async (name: string) => await prismaClient.countries.findFirst({ where: { name } });
