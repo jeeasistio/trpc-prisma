@@ -1,11 +1,25 @@
-import { createReactQueryHooks } from '@trpc/react'
-import { inferProcedureInput, inferProcedureOutput } from '@trpc/server';
+import { httpBatchLink } from '@trpc/client'
+import { createTRPCNext } from '@trpc/next'
 import type { AppRouter } from '../pages/api/trpc/[trpc]'
+import superjson from 'superjson'
 
-export const trpc = createReactQueryHooks<AppRouter>()
+const url = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/api/trpc` : 'http://localhost:3000/api/trpc'
 
-export type TQuery = keyof AppRouter['_def']['queries'];
-
-export type InferQueryInput<TRouteKey extends TQuery> = inferProcedureInput<AppRouter['_def']['queries'][TRouteKey]>;
-
-export type InferQueryOutput<TRouteKey extends TQuery> = inferProcedureOutput<AppRouter['_def']['queries'][TRouteKey]>;
+export const trpc = createTRPCNext<AppRouter>({
+    config({ ctx }) {
+        return {
+            links: [httpBatchLink({ url })],
+            transformer: superjson,
+            queryClientConfig: {
+                defaultOptions: {
+                    queries: {
+                        refetchOnWindowFocus: false,
+                        refetchOnMount: false,
+                        staleTime: 60,
+                    },
+                },
+            },
+        }
+    },
+    ssr: false,
+})

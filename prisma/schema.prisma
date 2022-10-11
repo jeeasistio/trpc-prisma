@@ -3,8 +3,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    // for this to work localy using sqlite you need to change the .env file content to DATABASE_URL=file:./file.db
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
