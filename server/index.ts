@@ -1,17 +1,26 @@
-import * as trpc from '@trpc/server'
 import { getAllCountries, getCountry } from '../helpers/queries'
 import superjson from 'superjson'
 import { z } from 'zod'
 
-const appRouter = trpc
-    .router()
-    .transformer(superjson)
-    .query('getAllCountries', {
-        input: z.object({
-            name: z.string().optional(),
-            cursor: z.number().nullish()
-        }),
-        async resolve({ input }) {
+import { initTRPC } from '@trpc/server'
+// You may rename the `t` variable to whatever you prefer.
+// Just make sure you initialize your root variable once per application.
+const t = initTRPC.create({ transformer: superjson, })
+// We explicitly export the methods we use here
+// This allows us to create reusable & protected base procedure
+export const middleware = t.middleware
+export const router = t.router
+export const publicProcedure = t.procedure
+
+const appRouter = router({
+    getAllCountries: publicProcedure
+        .input(
+            z.object({
+                name: z.string().optional(),
+                cursor: z.number().nullish(),
+            })
+        )
+        .query(async ({ input }) => {
             const limit = 5
             const name = input.name !== '' ? input.name : undefined
             const cursor = input.cursor ? { id: input.cursor } : undefined
@@ -23,17 +32,18 @@ const appRouter = trpc
 
             return {
                 countries,
-                nextCursor
+                nextCursor,
             }
-        }
-    })
-    .query('getCountry', {
-        input: z.object({
-            name: z.string()
         }),
-        async resolve({ input }) {
+    getCountry: publicProcedure
+        .input(
+            z.object({
+                name: z.string(),
+            })
+        )
+        .query(async ({ input }) => {
             return await getCountry(input.name)
-        }
-    })
+        }),
+})
 
-export default appRouter
+export default t.mergeRouters(appRouter)

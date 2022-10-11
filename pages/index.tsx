@@ -7,11 +7,9 @@ import styles from '../styles/Home.module.css'
 
 export default function Home() {
     const [text, setText] = useState('')
-    const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.useInfiniteQuery(
-        ['getAllCountries', { name: text }],
-        {
-            getNextPageParam: (lastCursor) => lastCursor.nextCursor
-        }
+    const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.getAllCountries.useInfiniteQuery(
+        { name: text },
+        { getNextPageParam: (lastCursor) => lastCursor.nextCursor }
     )
 
     const handleLoadMore = async () => {
