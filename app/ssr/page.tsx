@@ -1,6 +1,6 @@
 import { countries } from '@prisma/client'
-import Link from 'next/link'
 import { getBaseUrl } from '../../helpers/getBaseUrl'
+import { CountryList } from '../../ui/CountryList'
 
 const fetchFunc = async <T,>(): Promise<{ countries: T; time: string }> => {
     const res = await fetch(`${getBaseUrl()}/api/getCountries`, { cache: 'no-store' })
@@ -17,16 +17,7 @@ export default async function Home() {
     return (
         <div>
             <h3>{time}</h3>
-
-            <div>
-                {countries.map((country) => (
-                    <div key={country.name}>
-                        <Link href={`/ssr/${country.name}`}>
-                            <p>{country.name}</p>
-                        </Link>
-                    </div>
-                ))}
-            </div>
+            <CountryList page="ssr" countries={countries} />
         </div>
     )
 }

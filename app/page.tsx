@@ -1,20 +1,12 @@
-import Link from 'next/link'
 import { getAllCountries } from '../helpers/queries'
+import { CountryList } from '../ui/CountryList'
 
 export default async function Home() {
     const countries = await getAllCountries({ take: 100 })
 
     return (
         <div>
-            <div>
-                {countries.map((country) => (
-                    <div key={country.name}>
-                        <Link href={`/${country.name}`}>
-                            <p>{country.name}</p>
-                        </Link>
-                    </div>
-                ))}
-            </div>
+            <CountryList page="country" countries={countries} />
         </div>
     )
 }

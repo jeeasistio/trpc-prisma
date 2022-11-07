@@ -3,6 +3,7 @@
 import { countries } from '@prisma/client'
 import { use } from 'react'
 import { getBaseUrl } from '../../../helpers/getBaseUrl'
+import { CountryDetails } from '../../../ui/CountryDetails'
 
 const fetchFunc = async <T,>(name: string): Promise<T> => {
     const res = await fetch(`${getBaseUrl()}/api/getCountry?name=${name}`)
@@ -18,15 +19,7 @@ export default function Country({ params }: Props) {
 
     return (
         <div>
-            {country && (
-                <div>
-                    <h1>{country.name}</h1>
-                    <p>Capital: {country.capital}</p>
-                    <p>Continent: {country.continent}</p>
-                    <p>Region: {country.region}</p>
-                    <p>Population: {country.population}</p>
-                </div>
-            )}
+            <CountryDetails {...country} />
         </div>
     )
 }
