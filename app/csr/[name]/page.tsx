@@ -1,25 +1,23 @@
+'use client'
+
 import { countries } from '@prisma/client'
+import { use } from 'react'
 import { getBaseUrl } from '../../../helpers/getBaseUrl'
 
-const fetchFunc = async <T,>(name: string): Promise<{ country: T; time: string }> => {
-    const res = await fetch(`${getBaseUrl()}/api/getCountry?name=${name}`, { cache: 'no-store' })
+const fetchFunc = async <T,>(name: string): Promise<T> => {
+    const res = await fetch(`${getBaseUrl()}/api/getCountry?name=${name}`)
     const data = await res.json()
-    return {
-        country: data.country as T,
-        time: new Date().toLocaleString(),
-    }
+    return data.country as T
 }
 
 interface Props {
     params: { name: string }
 }
-export default async function Country({ params }: Props) {
-    const { country, time } = await fetchFunc<countries[][number]>(params.name)
+export default function Country({ params }: Props) {
+    const country = use(fetchFunc<countries[][number]>(params.name))
 
     return (
         <div>
-            <h3>{time}</h3>
-
             {country && (
                 <div>
                     <h1>{country.name}</h1>

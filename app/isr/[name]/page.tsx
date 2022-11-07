@@ -1,5 +1,6 @@
 import { countries } from '@prisma/client'
 import { getBaseUrl } from '../../../helpers/getBaseUrl'
+import { getAllCountries } from '../../../helpers/queries'
 
 const fetchFunc = async <T,>(name: string): Promise<{ country: T; time: string }> => {
     const res = await fetch(`${getBaseUrl()}/api/getCountry?name=${name}`, { next: { revalidate: 60 } })
@@ -30,4 +31,12 @@ export default async function Country({ params }: Props) {
             )}
         </div>
     )
+}
+
+export async function generateStaticParams() {
+    const countries = await getAllCountries({ take: 100 })
+
+    return countries.map((country) => ({
+        name: country.name,
+    }))
 }

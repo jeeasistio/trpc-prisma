@@ -21,7 +21,7 @@ export default async function Home() {
             <div>
                 {countries.map((country) => (
                     <div key={country.name}>
-                        <Link href={`/ssr/${country.name}`}>
+                        <Link href={`/isr/${country.name}`}>
                             <p>{country.name}</p>
                         </Link>
                     </div>
