@@ -8,7 +8,7 @@ export default async function Country({ params }: Props) {
     const country = await getCountry(params.name)
     return (
         <div>
-            <CountryDetails {...country} />
+            {country && <CountryDetails {...country} />}
         </div>
     )
 }
