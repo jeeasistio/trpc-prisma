@@ -1,7 +1,7 @@
 import prisma from './prisma'
 
 export const getAllCountries = async ({
-    take = 10,
+    take,
     cursor,
     skip,
     name,
