@@ -12,17 +12,15 @@ const fetchFunc = async <T,>(cursor?: number): Promise<{ countries: T; time: str
     }
 }
 
-let cursor: number | undefined = 0
-
-export default async function Home() {
-    const { countries, time } = await fetchFunc<countries[]>(cursor)
+export default async function Home({ searchParams }: { searchParams: { cursor?: string } }) {
+    const { countries, time } = await fetchFunc<countries[]>(Number(searchParams.cursor))
     const lastItem = countries.pop()
 
     return (
         <div>
             <h3>{time}</h3>
             <CountryList page="ssr" countries={countries} />
-            <SSRLoadMore oldCursor={cursor} newCursor={lastItem?.id} />
+            <SSRLoadMore newCursor={lastItem?.id} />
         </div>
     )
 }
