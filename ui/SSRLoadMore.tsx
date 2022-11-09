@@ -2,10 +2,10 @@
 
 import { useRouter } from 'next/navigation'
 
-export default function SSRLoadMore({ newCursor }: { oldCursor?: number; newCursor?: number }) {
+export default function SSRLoadMore({ newPage }: { newPage?: number }) {
     const router = useRouter()
     const handleLoadMore = () => {
-        router.replace(`/ssr?cursor=${newCursor}`)
+        router.replace(`/ssr?page=${newPage}`)
     }
 
     return <button onClick={handleLoadMore}>Load More</button>

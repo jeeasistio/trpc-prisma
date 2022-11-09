@@ -1,7 +1,7 @@
 import prisma from './prisma'
 
 export const getAllCountries = async ({
-    take,
+    take = 10,
     cursor,
     skip,
     name,
@@ -11,7 +11,6 @@ export const getAllCountries = async ({
     skip?: number
     name?: string
 }) => {
-    console.log(cursor)
     return await prisma.countries.findMany({
         where: { name: { contains: name } },
         orderBy: { id: 'asc' },
