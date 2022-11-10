@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getAllCountries } from '../../helpers/queries'
-import LoadMore from '../../ui/LoadMore'
+import { LoadMore } from '../../ui/LoadMore'
 
 export const revalidate = 10
 
@@ -11,7 +11,7 @@ export default async function Home({ searchParams }: { searchParams?: { page?: s
     return (
         <div>
             {countries.map((country) => (
-                <Link key={country.name} href={`/csr/${country.name}`}>
+                <Link key={country.name} href={`/isr/${country.name}`}>
                     <p>{country.name}</p>
                 </Link>
             ))}
