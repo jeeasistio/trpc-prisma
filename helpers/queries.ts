@@ -20,4 +20,4 @@ export const getAllCountries = async ({
     })
 }
 
-export const getCountry = async (name: string) => await prisma.countries.findFirst({ where: { name } })
+export const getCountry = async (name: string) => (await prisma.countries.findFirst({ where: { name } }))!

@@ -21,6 +21,7 @@ const fetchFunc = async (body: DataBody) => {
 
 export const EditForm = ({ country }: { country: countries }) => {
     const router = useRouter()
+    const [isEditing, setIsEditing] = useState(false)
     const [data, setData] = useState<FormBody>({
         capital: country.capital,
         continent: country.continent,
@@ -42,15 +43,24 @@ export const EditForm = ({ country }: { country: countries }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            {fields.map((field) => (
-                <div key={field} className={styles.textfieldCtn}>
-                    <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}: </label>
-                    <input id={field} type="text" value={data[field]} onChange={handleChange} name={field} />
-                </div>
-            ))}
+        <div>
+            <div>
+                {isEditing && <button onClick={() => setIsEditing(false)}>Cancel</button>}
+                {!isEditing && <button onClick={() => setIsEditing(true)}>Edit</button>}
+            </div>
 
-            <button type="submit">Submit</button>
-        </form>
+            {isEditing && (
+                <form onSubmit={handleSubmit} className={styles.form}>
+                    {fields.map((field) => (
+                        <div key={field} className={styles.textfieldCtn}>
+                            <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}: </label>
+                            <input id={field} type="text" value={data[field]} onChange={handleChange} name={field} />
+                        </div>
+                    ))}
+
+                    <button type="submit">Submit</button>
+                </form>
+            )}
+        </div>
     )
 }

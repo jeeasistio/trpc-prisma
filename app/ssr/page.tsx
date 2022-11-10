@@ -1,26 +1,21 @@
-import { countries } from '@prisma/client'
-import { getBaseUrl } from '../../helpers/getBaseUrl'
-import { CountryList } from '../../ui/CountryList'
-import ServerLoadMore from '../../ui/ServerLoadMore'
+import Link from 'next/link'
+import { getAllCountries } from '../../helpers/queries'
+import LoadMore from '../../ui/LoadMore'
 
-const fetchFunc = async <T,>(page?: number): Promise<{ countries: T; time: string }> => {
-    const res = await fetch(`${getBaseUrl()}/api/getCountries?page=${page}`, { cache: 'no-store' })
-    const data = await res.json()
-    return {
-        countries: data.countries as T,
-        time: new Date().toLocaleString(),
-    }
-}
+export const dynamic = 'force-dynamic'
 
 export default async function Home({ searchParams }: { searchParams?: { page?: string } }) {
-    const { countries, time } = await fetchFunc<countries[]>(Number(searchParams?.page ?? 1))
+    const countries = await getAllCountries({ take: Number(searchParams?.page ?? 1) * 10 })
     const newPage = Number(searchParams?.page ?? 1) + 1
 
     return (
         <div>
-            <h3>{time}</h3>
-            <CountryList path="ssr" countries={countries} />
-            <ServerLoadMore path="ssr" newPage={newPage} />
+            {countries.map((country) => (
+                <Link key={country.name} href={`/csr/${country.name}`}>
+                    <p>{country.name}</p>
+                </Link>
+            ))}
+            <LoadMore path="ssr" newPage={newPage} />
         </div>
     )
 }

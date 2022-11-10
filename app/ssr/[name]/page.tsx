@@ -1,26 +1,23 @@
-import { countries } from '@prisma/client'
-import { getBaseUrl } from '../../../helpers/getBaseUrl'
-import { CountryDetails } from '../../../ui/CountryDetails'
+import { getCountry } from '../../../helpers/queries'
+import { EditForm } from '../../../ui/EditForm'
 
-const fetchFunc = async <T,>(name: string): Promise<{ country: T; time: string }> => {
-    const res = await fetch(`${getBaseUrl()}/api/getCountry?name=${name}`, { cache: 'no-store' })
-    const data = await res.json()
-    return {
-        country: data.country as T,
-        time: new Date().toLocaleString(),
-    }
-}
-
+export const dynamic = 'force-dynamic',
+    dynamicParams = true
 interface Props {
     params: { name: string }
 }
 export default async function Country({ params }: Props) {
-    const { country, time } = await fetchFunc<countries[][number]>(params.name)
+    const { name, capital, continent, id, population, region } = await getCountry(params.name)
 
     return (
         <div>
-            <h3>{time}</h3>
-            <CountryDetails {...country} />
+            <h1>{name}</h1>
+            <p>Capital: {capital}</p>
+            <p>Continent: {continent}</p>
+            <p>Region: {region}</p>
+            <p>Population: {population}</p>
+
+            <EditForm country={{ name, capital, continent, population, region, id }} />
         </div>
     )
 }
