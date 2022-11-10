@@ -36,6 +36,7 @@ interface Props {
 }
 export default function Country({ params }: Props) {
     const [country, setCountry] = useState<countries>()
+    const [, setRerender] = useState(false)
 
     useEffect(() => {
         const fetchFunc = async () => {
@@ -43,9 +44,9 @@ export default function Country({ params }: Props) {
             setCountry(await res.json())
         }
 
-        fetchFunc()
+        fetchFunc().then(() => setRerender(true))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [country])
+    }, [])
 
     return (
         <div>
