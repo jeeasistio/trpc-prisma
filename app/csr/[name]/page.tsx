@@ -9,10 +9,18 @@ interface Props {
 }
 
 const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+let renderLog = new Date().toISOString()
 
-const fetchFunc = async <T,>(name: string): Promise<T> => {
+const fetchFunc = async <T,>(name: string): Promise<{ country: T; mutate: () => void }> => {
     const res = await fetch(`${baseUrl}/api/getCountry?name=${name}`)
-    return await res.json()
+    return {
+        country: await res.json(),
+        mutate,
+    }
+}
+
+const mutate = () => {
+    renderLog = new Date().toISOString()
 }
 
 const cachedFetches = new Map<string, Promise<any>>()
@@ -26,9 +34,10 @@ interface Props {
     params: { name: string }
 }
 export default function Country({ params }: Props) {
-    const { name, capital, continent, id, population, region } = use(
-        queryClient(`${params.name}`, () => fetchFunc<countries>(params.name))
-    )
+    const {
+        country: { name, capital, continent, id, population, region },
+        mutate,
+    } = use(queryClient(`${params.name}-${renderLog}`, () => fetchFunc<countries>(params.name)))
 
     return (
         <div>
@@ -38,7 +47,7 @@ export default function Country({ params }: Props) {
             <p>Region: {region}</p>
             <p>Population: {population}</p>
 
-            <EditForm country={{ name, capital, continent, population, region, id }} />
+            <EditForm country={{ name, capital, continent, population, region, id }} callback={mutate} />
         </div>
     )
 }
