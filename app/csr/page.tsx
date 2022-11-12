@@ -2,20 +2,25 @@
 
 import { countries } from '@prisma/client'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { use, useState } from 'react'
+
+const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+
+const fetchFunc = async <T,>(page?: number): Promise<T> => {
+    const res = await fetch(`${baseUrl}/api/getCountries?page=${page}`)
+    return await res.json()
+}
+
+const cachedFetches = new Map<number, Promise<any>>()
+
+const queryClient = <QueryResult,>(page: number, query: () => Promise<QueryResult>): Promise<QueryResult> => {
+    if (!cachedFetches.has(page)) cachedFetches.set(page, query())
+    return cachedFetches.get(page)!
+}
 
 export default function Home() {
     const [page, setPage] = useState(1)
-    const [countries, setCountries] = useState<countries[]>([])
-
-    useEffect(() => {
-        const fetchFunc = async () => {
-            const res = await fetch(`/api/getCountries?page=${page}`)
-            setCountries(await res.json())
-        }
-
-        fetchFunc()
-    }, [page])
+    const countries = use(queryClient<countries[]>(page, () => fetchFunc<countries[]>(page)))
 
     const handleLoadMore = () => {
         setPage((prev) => prev + 1)
