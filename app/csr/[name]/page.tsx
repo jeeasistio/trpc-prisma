@@ -11,7 +11,7 @@ interface Props {
 const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
 
 const fetchFunc = async <T,>(name: string): Promise<T> => {
-    const res = await fetch(`${baseUrl}/api/getCountry?name=${name}`, { cache: 'no-store' })
+    const res = await fetch(`${baseUrl}/api/getCountry?name=${name}`)
     return await res.json()
 }
 

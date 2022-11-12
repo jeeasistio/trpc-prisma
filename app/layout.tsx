@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import styles from '../styles/Nav.module.css'
+import styles from './RootLayout.module.css'
 import { usePathname } from 'next/navigation'
 
 const links = [
