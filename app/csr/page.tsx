@@ -7,7 +7,7 @@ import { use, useState } from 'react'
 const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
 
 const fetchFunc = async <T,>(page?: number): Promise<T> => {
-    const res = await fetch(`${baseUrl}/api/getCountries?page=${page}`)
+    const res = await fetch(`${baseUrl}/api/getCountries?page=${page}`, { cache: 'no-store' })
     return await res.json()
 }
 
@@ -18,7 +18,7 @@ const queryClient = <QueryResult,>(page: number, query: () => Promise<QueryResul
     return cachedFetches.get(page)!
 }
 
-export default function Home() {
+export default function CSR() {
     const [page, setPage] = useState(1)
     const countries = use(queryClient<countries[]>(page, () => fetchFunc<countries[]>(page)))
 

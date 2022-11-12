@@ -16,11 +16,11 @@ const fetchFunc = async (body: DataBody, callback: () => void) => {
         body: JSON.stringify(body),
     })
     const data = await res.json()
-    callback()
+    if (callback) callback()
     return data
 }
 
-export const EditForm = ({ country, callback }: { country: countries; callback(): void }) => {
+export const EditForm = ({ country, callback }: { country: countries; callback?: () => void }) => {
     const router = useRouter()
     const [isEditing, setIsEditing] = useState(false)
     const [data, setData] = useState<FormBody>({
@@ -38,7 +38,7 @@ export const EditForm = ({ country, callback }: { country: countries; callback()
     }
 
     const mutateCallback = () => {
-        callback()
+        if (callback) callback()
         router.refresh()
     }
 
