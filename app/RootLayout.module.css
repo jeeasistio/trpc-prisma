@@ -1,0 +1,19 @@
+.ul {
+    display: flex;
+    justify-content: space-evenly;
+    text-decoration: none;
+    list-style: none;
+}
+
+.active {
+    text-decoration: none;
+    font-size: large;
+    font-weight: 700;
+    color: blue;
+}
+
+.inactive {
+    text-decoration: none;
+    font-weight: 500;
+    color: #000000;
+}

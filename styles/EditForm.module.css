@@ -1,0 +1,10 @@
+.textfieldCtn {
+    margin: 10px 0px;
+}
+
+.form {
+    margin: 8px 0px;
+    padding: 16px;
+    border: 1px solid #ccc;
+    width: max-content;
+}

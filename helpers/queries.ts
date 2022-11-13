@@ -1,21 +1,23 @@
-import prismaClient from './prisma';
+import { prisma } from './prisma'
 
 export const getAllCountries = async ({
     take,
     cursor,
     skip,
-    name
+    name,
 }: {
     take?: number
-    cursor?: { id: number }
+    cursor?: number
     skip?: number
     name?: string
-}) =>
-    await prismaClient.countries.findMany({
+}) => {
+    return await prisma.countries.findMany({
         where: { name: { contains: name } },
+        orderBy: { id: 'asc' },
         take,
-        cursor,
-        skip
+        cursor: cursor ? { id: cursor } : undefined,
+        skip,
     })
+}
 
-export const getCountry = async (name: string) => await prismaClient.countries.findFirst({ where: { name } });
+export const getCountry = async (name: string) => (await prisma.countries.findFirst({ where: { name } }))!
